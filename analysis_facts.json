@@ -1,0 +1,487 @@
+{
+  "source_sha256": "ed4789a51f48f715dd46be71d84f2ff46cb672b6cd12f45f7e65a85b8da03b79",
+  "source_rows": 954,
+  "source_columns": 11,
+  "pandas_version": "3.0.6",
+  "renamed_columns": {
+    "user_id ": "user_id"
+  },
+  "missing_before": {
+    "user_id": 0,
+    "region": 1,
+    "device": 1,
+    "channel": 0,
+    "session_start": 0,
+    "session_end": 0,
+    "time_session": 0,
+    "click_count": 0,
+    "buy_count": 0,
+    "price": 0,
+    "age": 0
+  },
+  "missing_rows": 2,
+  "missing_after": {
+    "user_id": 0,
+    "region": 0,
+    "device": 0,
+    "channel": 0,
+    "session_start": 0,
+    "session_end": 0,
+    "time_session": 0,
+    "click_count": 0,
+    "buy_count": 0,
+    "price": 0,
+    "age": 0
+  },
+  "explicit_duplicates_removed": 0,
+  "category_normalization": [
+    {
+      "column": "region",
+      "before": "Russia",
+      "after": "Russia",
+      "rows": 52
+    },
+    {
+      "column": "region",
+      "before": "USA",
+      "after": "United States",
+      "rows": 1
+    },
+    {
+      "column": "region",
+      "before": "United States",
+      "after": "United States",
+      "rows": 900
+    },
+    {
+      "column": "region",
+      "before": "Unknown",
+      "after": "Unknown",
+      "rows": 1
+    },
+    {
+      "column": "device",
+      "before": "Android",
+      "after": "Android",
+      "rows": 185
+    },
+    {
+      "column": "device",
+      "before": "IPHONE",
+      "after": "iPhone",
+      "rows": 2
+    },
+    {
+      "column": "device",
+      "before": "MAC",
+      "after": "Mac",
+      "rows": 1
+    },
+    {
+      "column": "device",
+      "before": "Mac",
+      "after": "Mac",
+      "rows": 243
+    },
+    {
+      "column": "device",
+      "before": "PC",
+      "after": "PC",
+      "rows": 103
+    },
+    {
+      "column": "device",
+      "before": "Unknown",
+      "after": "Unknown",
+      "rows": 1
+    },
+    {
+      "column": "device",
+      "before": "iPhone",
+      "after": "iPhone",
+      "rows": 419
+    },
+    {
+      "column": "channel",
+      "before": "FaceBoom",
+      "after": "FaceBoom",
+      "rows": 149
+    },
+    {
+      "column": "channel",
+      "before": "MediaTornado",
+      "after": "MediaTornado",
+      "rows": 53
+    },
+    {
+      "column": "channel",
+      "before": "TipTop",
+      "after": "TipTop",
+      "rows": 142
+    },
+    {
+      "column": "channel",
+      "before": "organic",
+      "after": "organic",
+      "rows": 610
+    }
+  ],
+  "normalized_cells": 4,
+  "implicit_duplicates_removed": 0,
+  "retained_repeated_user_rows": 170,
+  "typed_duplicates_removed": 0,
+  "types_after": {
+    "user_id": "string",
+    "region": "category",
+    "device": "category",
+    "channel": "category",
+    "session_start": "datetime64[us]",
+    "session_end": "datetime64[us]",
+    "time_session": "int64",
+    "click_count": "int64",
+    "buy_count": "int64",
+    "price": "float64",
+    "age": "int64"
+  },
+  "clean_rows": 954,
+  "unique_users": 784,
+  "remaining_missing": 0,
+  "artifact_sha256": {
+    "visits_clean.csv": "f363269c9877b7bfb35b8eb9e568c561dfb98e792875a83005d549ce4f172256",
+    "region_device_counts.csv": "e9d834179458559ea659916089b222238cfdd1f8d578f26724f0b9809ecd7f83",
+    "device_channel_counts.csv": "dbe303d1534d7a15eaabf8379417cb138118162ce8207824255fbf2a0f98a65e",
+    "users_by_channel.csv": "20ab824cfbaeec7b3fa450b71d51a7900c5b122a7365288947e06f0d7cbc7727",
+    "users_by_device.csv": "ef54df89788e69aa75c5ea7ed62730a026d641bcdc3ee95aa0495d2e4f7f2f37",
+    "users_device_channel.csv": "8386a3c05f80044c6cc12beefaf3c4a87d3c9051fc1e0a79a04701e0b9dc339a",
+    "category_normalization.csv": "361d72ac1b2b96a57153bfc2259648de7eba4dfbaf35759edd8497f60c5a38d5"
+  },
+  "aggregations": {
+    "region_device_counts": [
+      {
+        "region": "Russia",
+        "device": "Android",
+        "count": 11
+      },
+      {
+        "region": "Russia",
+        "device": "Mac",
+        "count": 12
+      },
+      {
+        "region": "Russia",
+        "device": "PC",
+        "count": 6
+      },
+      {
+        "region": "Russia",
+        "device": "iPhone",
+        "count": 23
+      },
+      {
+        "region": "United States",
+        "device": "Android",
+        "count": 174
+      },
+      {
+        "region": "United States",
+        "device": "Mac",
+        "count": 232
+      },
+      {
+        "region": "United States",
+        "device": "PC",
+        "count": 97
+      },
+      {
+        "region": "United States",
+        "device": "Unknown",
+        "count": 1
+      },
+      {
+        "region": "United States",
+        "device": "iPhone",
+        "count": 397
+      },
+      {
+        "region": "Unknown",
+        "device": "iPhone",
+        "count": 1
+      }
+    ],
+    "device_channel_counts": [
+      {
+        "device": "iPhone",
+        "channel": "organic",
+        "count": 249
+      },
+      {
+        "device": "Mac",
+        "channel": "organic",
+        "count": 174
+      },
+      {
+        "device": "Android",
+        "channel": "organic",
+        "count": 115
+      },
+      {
+        "device": "iPhone",
+        "channel": "TipTop",
+        "count": 78
+      },
+      {
+        "device": "PC",
+        "channel": "organic",
+        "count": 72
+      },
+      {
+        "device": "iPhone",
+        "channel": "FaceBoom",
+        "count": 65
+      },
+      {
+        "device": "Mac",
+        "channel": "FaceBoom",
+        "count": 36
+      },
+      {
+        "device": "Android",
+        "channel": "FaceBoom",
+        "count": 33
+      },
+      {
+        "device": "iPhone",
+        "channel": "MediaTornado",
+        "count": 29
+      },
+      {
+        "device": "Android",
+        "channel": "TipTop",
+        "count": 26
+      },
+      {
+        "device": "Mac",
+        "channel": "TipTop",
+        "count": 24
+      },
+      {
+        "device": "PC",
+        "channel": "FaceBoom",
+        "count": 15
+      },
+      {
+        "device": "PC",
+        "channel": "TipTop",
+        "count": 14
+      },
+      {
+        "device": "Android",
+        "channel": "MediaTornado",
+        "count": 11
+      },
+      {
+        "device": "Mac",
+        "channel": "MediaTornado",
+        "count": 10
+      },
+      {
+        "device": "PC",
+        "channel": "MediaTornado",
+        "count": 2
+      },
+      {
+        "device": "Unknown",
+        "channel": "MediaTornado",
+        "count": 1
+      }
+    ],
+    "users_by_channel": [
+      {
+        "channel": "organic",
+        "users": 547
+      },
+      {
+        "channel": "FaceBoom",
+        "users": 147
+      },
+      {
+        "channel": "TipTop",
+        "users": 139
+      },
+      {
+        "channel": "MediaTornado",
+        "users": 53
+      }
+    ],
+    "users_by_device": [
+      {
+        "device": "iPhone",
+        "users": 390
+      },
+      {
+        "device": "Mac",
+        "users": 231
+      },
+      {
+        "device": "Android",
+        "users": 178
+      },
+      {
+        "device": "PC",
+        "users": 103
+      },
+      {
+        "device": "Unknown",
+        "users": 1
+      }
+    ],
+    "users_device_channel": [
+      {
+        "device": "Android",
+        "FaceBoom": 33,
+        "MediaTornado": 11,
+        "TipTop": 26,
+        "organic": 112
+      },
+      {
+        "device": "Mac",
+        "FaceBoom": 35,
+        "MediaTornado": 10,
+        "TipTop": 24,
+        "organic": 170
+      },
+      {
+        "device": "PC",
+        "FaceBoom": 15,
+        "MediaTornado": 2,
+        "TipTop": 14,
+        "organic": 72
+      },
+      {
+        "device": "Unknown",
+        "FaceBoom": 0,
+        "MediaTornado": 1,
+        "TipTop": 0,
+        "organic": 0
+      },
+      {
+        "device": "iPhone",
+        "FaceBoom": 64,
+        "MediaTornado": 29,
+        "TipTop": 76,
+        "organic": 239
+      }
+    ],
+    "category_normalization": [
+      {
+        "column": "region",
+        "before": "Russia",
+        "after": "Russia",
+        "rows": 52
+      },
+      {
+        "column": "region",
+        "before": "USA",
+        "after": "United States",
+        "rows": 1
+      },
+      {
+        "column": "region",
+        "before": "United States",
+        "after": "United States",
+        "rows": 900
+      },
+      {
+        "column": "region",
+        "before": "Unknown",
+        "after": "Unknown",
+        "rows": 1
+      },
+      {
+        "column": "device",
+        "before": "Android",
+        "after": "Android",
+        "rows": 185
+      },
+      {
+        "column": "device",
+        "before": "IPHONE",
+        "after": "iPhone",
+        "rows": 2
+      },
+      {
+        "column": "device",
+        "before": "MAC",
+        "after": "Mac",
+        "rows": 1
+      },
+      {
+        "column": "device",
+        "before": "Mac",
+        "after": "Mac",
+        "rows": 243
+      },
+      {
+        "column": "device",
+        "before": "PC",
+        "after": "PC",
+        "rows": 103
+      },
+      {
+        "column": "device",
+        "before": "Unknown",
+        "after": "Unknown",
+        "rows": 1
+      },
+      {
+        "column": "device",
+        "before": "iPhone",
+        "after": "iPhone",
+        "rows": 419
+      },
+      {
+        "column": "channel",
+        "before": "FaceBoom",
+        "after": "FaceBoom",
+        "rows": 149
+      },
+      {
+        "column": "channel",
+        "before": "MediaTornado",
+        "after": "MediaTornado",
+        "rows": 53
+      },
+      {
+        "column": "channel",
+        "before": "TipTop",
+        "after": "TipTop",
+        "rows": 142
+      },
+      {
+        "column": "channel",
+        "before": "organic",
+        "after": "organic",
+        "rows": 610
+      }
+    ]
+  },
+  "row_reconciliation": {
+    "input": 954,
+    "missing_removed": 0,
+    "explicit_removed": 0,
+    "implicit_removed": 0,
+    "typed_removed": 0,
+    "output": 954
+  },
+  "interpretations": {
+    "info": "В таблице 954 строк и 11 столбцов. По одному пропуску в region и device; остальные поля заполнены. Четыре поля первоначально float64, два int64, пять строковых.",
+    "describe": "В исходной таблице медиана time_session равна 21 минуте, среднее — 29,063, максимум — 262: распределение с длинным правым хвостом. Медиана click_count — 7, buy_count — 2, price — 3739. Возраст лежит в диапазоне 10–71 год, медиана — 39. Эти статистики относятся к строкам-сессиям, поэтому повторные посетители учитываются несколько раз. Нулевые значения не считаем пропусками без подтверждения источником.",
+    "missing": "Неполных строк: 2 из 954 (0.2096%). Каждое из полей region и device имеет один пропуск (0,1048%). Заполнение Unknown сохранило обе сессии; после заполнения пропусков нет.",
+    "duplicates": "Явных полных повторов — 0; нормализация исправила 4 значений категорий и выявила 0 полных повторов, которые удалены. Сохранено 170 повторных посещений сверх первого по user_id: отличаются другие поля, поэтому удалять их по одному идентификатору нельзя.",
+    "task1": "Больше всего сессий относится к United States: 901 из 954 (94.44%). Это распределение посещений по указанной стране, а не оценка населения или рынка. Unknown не смешивается с известными странами.",
+    "task2": "Наиболее частое сочетание — iPhone / organic: 249 сессий. Высокое число сессий не доказывает эффективность рекламы: здесь не сравниваются затраты и конверсия.",
+    "task3": "Лидер по числу уникальных пользователей — organic: 547. Всего в наборе 784 уникальных пользователей и 954 сессий. В таблице по устройствам также считаются пользователи внутри каждой категории, а не визиты.",
+    "task4": "Наибольшее число пользователей в сочетании iPhone / organic: 239. Отдельная строка Unknown позволяет не потерять сессию с неизвестным устройством. Таблица характеризует совместное распределение платформ и каналов в предоставленной выборке.",
+    "conclusion": "Проанализирован visits.csv с 954 записями сессий интернет-магазина и 11 атрибутами. Удалён пробел из имени user_id, два пропуска категориальных признаков заменены на Unknown без потери строк. Унифицированы 4 значений страны и устройства; явных дубликатов 0, после нормализации удалено 0. После приведения типов дополнительно удалено 0 полных повторов. Итог — 954 сессий и 784 уникальных пользователей. Даты преобразованы в datetime, идентификаторы — в строки, категории — в category, целые показатели — в int64. По посещениям лидирует United States (901 сессий); чаще всего встречается iPhone / organic (249 сессий). Канал organic привлёк 547 уникальных пользователей; максимальная ячейка сводной таблицы — iPhone / organic (239 пользователей). Повторные визиты сохранены: их нельзя приравнивать к новым людям. Результаты характеризуют данную выборку, но без данных о рекламных расходах не показывают окупаемость каналов. Очищенная таблица и все группировки сохранены в CSV для воспроизведения анализа."
+  }
+}

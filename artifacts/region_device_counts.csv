@@ -1,0 +1,11 @@
+region,device,count
+Russia,Android,11
+Russia,Mac,12
+Russia,PC,6
+Russia,iPhone,23
+United States,Android,174
+United States,Mac,232
+United States,PC,97
+United States,Unknown,1
+United States,iPhone,397
+Unknown,iPhone,1

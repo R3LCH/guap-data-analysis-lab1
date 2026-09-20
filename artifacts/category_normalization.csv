@@ -1,0 +1,16 @@
+column,before,after,rows
+region,Russia,Russia,52
+region,USA,United States,1
+region,United States,United States,900
+region,Unknown,Unknown,1
+device,Android,Android,185
+device,IPHONE,iPhone,2
+device,MAC,Mac,1
+device,Mac,Mac,243
+device,PC,PC,103
+device,Unknown,Unknown,1
+device,iPhone,iPhone,419
+channel,FaceBoom,FaceBoom,149
+channel,MediaTornado,MediaTornado,53
+channel,TipTop,TipTop,142
+channel,organic,organic,610
