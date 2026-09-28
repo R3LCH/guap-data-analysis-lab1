@@ -47,15 +47,25 @@ md(3, '''### Описание предметной области
 | buy_count | Число покупок в сессии, целое неотрицательное число. |
 | price | Денежный показатель сессии; единица валюты и точная методика не документированы. |
 | age | Возраст пользователя в годах, целое число. |''')
-md(1, '### 1.Чтение файла (набора данных)\nИспользуется локальная копия исходного CSV без изменения исходных значений. SHA-256 позволяет связать результат с конкретным файлом.')
+md(1, '### 1.Чтение файла (набора данных)\nЛокально используется копия официального CSV. При открытии блокнота в Google Colab файл автоматически загружается из опубликованного репозитория вместе с работой; контроль SHA-256 подтверждает совпадение с исходным набором. Для запуска ячеек нужен доступ к интернету.')
 code(1, '''from pathlib import Path
 import hashlib
 import json
 import io
+from urllib.request import urlopen
 import pandas as pd
 from IPython.display import display
 
 source = Path('sources/visits.csv')
+if not source.exists():
+    source.parent.mkdir(parents=True, exist_ok=True)
+    dataset_url = ('https://raw.githubusercontent.com/R3LCH/'
+                   'guap-data-analysis-lab1/main/sources/visits.csv')
+    data = urlopen(dataset_url, timeout=30).read()
+    expected_sha256 = 'ed4789a51f48f715dd46be71d84f2ff46cb672b6cd12f45f7e65a85b8da03b79'
+    if hashlib.sha256(data).hexdigest() != expected_sha256:
+        raise ValueError('Опубликованный visits.csv отличается от исходного файла')
+    source.write_bytes(data)
 artifacts = Path('artifacts')
 artifacts.mkdir(exist_ok=True)
 pd.set_option('display.max_rows', 100)
