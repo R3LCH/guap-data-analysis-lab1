@@ -251,24 +251,214 @@ facts['interpretations']['task3'] = (f'Лидер по числу уникаль
 facts['interpretations']['task4'] = (f'Наибольшее число пользователей в сочетании {max_pair[0]} / {max_pair[1]}: {max_users}. '
     'Отдельная строка Unknown позволяет не потерять сессию с неизвестным устройством. '
     'Таблица характеризует совместное распределение платформ и каналов в предоставленной выборке.')
+numeric = df[['time_session', 'click_count', 'buy_count', 'price', 'age']].describe()
+duration_stats = numeric['time_session']
+organic_n = int((df['channel'] == 'organic').sum())
+iphone_n = int((df['device'] == 'iPhone').sum())
 facts['interpretations']['conclusion'] = (
-    f'Проанализирован visits.csv с {len(raw)} записями сессий интернет-магазина и 11 атрибутами. '
-    'Удалён пробел из имени user_id, два пропуска категориальных признаков заменены на Unknown без потери строк. '
-    f'Унифицированы {facts["normalized_cells"]} значений страны и устройства; явных дубликатов {explicit}, '
-    f'после нормализации удалено {implicit}. После приведения типов дополнительно удалено {typed_duplicates} полных повторов. '
-    f'Итог — {len(df)} сессий и {facts["unique_users"]} уникальных пользователей. '
-    'Даты преобразованы в datetime, идентификаторы — в строки, категории — в category, целые показатели — в int64. '
-    f'По посещениям лидирует {region_totals.index[0]} ({region_totals.iloc[0]} сессий); '
-    f'чаще всего встречается {leader_pair.device} / {leader_pair.channel} ({leader_pair["count"]} сессий). '
-    f'Канал {channel_leader} привлёк {channel_count} уникальных пользователей; '
-    f'максимальная ячейка сводной таблицы — {max_pair[0]} / {max_pair[1]} ({max_users} пользователей). '
-    'Повторные визиты сохранены: их нельзя приравнивать к новым людям. '
-    'Результаты характеризуют данную выборку, но без данных о рекламных расходах не показывают окупаемость каналов. '
-    'Очищенная таблица и все группировки сохранены в CSV для воспроизведения анализа.')
+    f'Объект исследования — {len(raw)} зарегистрированных сессий интернет-магазина '
+    f'({facts["unique_users"]} различных user_id); единица наблюдения — сессия, '
+    'не отдельный человек. Проверены названия и типы 11 полей, пропуски и повторы: '
+    'два пропуска region/device отмечены Unknown, '
+    f'исправлены {facts["normalized_cells"]} написания категорий; '
+    f'удалено {implicit} полных дублей после нормализации, явных — {explicit}, '
+    f'после приведения типов — {typed_duplicates}. Число сессий после обработки: {len(df)}; пропусков нет. '
+    f'Продолжительность: среднее {duration_stats["mean"]:.2f} мин, медиана '
+    f'{duration_stats["50%"]:.0f} мин, стандартное отклонение '
+    f'{duration_stats["std"]:.2f} мин, квартильный диапазон '
+    f'{duration_stats["25%"]:.0f}–{duration_stats["75%"]:.0f} мин, '
+    f'минимум {duration_stats["min"]:.0f}, максимум {duration_stats["max"]:.0f} мин. '
+    'Среднее выше медианы: длинные сессии увеличивают среднее; разброс значителен. '
+    f'Медианы кликов и покупок — {numeric.loc["50%", "click_count"]:.0f} и '
+    f'{numeric.loc["50%", "buy_count"]:.0f} за сессию; медианный price — '
+    f'{numeric.loc["50%", "price"]:.0f} (валюта не задана), медианный возраст — '
+    f'{numeric.loc["50%", "age"]:.0f} лет. '
+    f'Страна {region_totals.index[0]}: {region_totals.iloc[0]} '
+    f'({region_totals.iloc[0] / len(df):.1%}) сессий; '
+    f'organic: {organic_n} ({organic_n / len(df):.1%}); '
+    f'iPhone: {iphone_n} ({iphone_n / len(df):.1%}). '
+    f'Самая частая пара device/channel — {leader_pair.device}/{leader_pair.channel}: '
+    f'{leader_pair["count"]} сессий; по числу разных людей лидирует '
+    f'{channel_leader}: {channel_count}, а пара {max_pair[0]}/{max_pair[1]} '
+    f'содержит {max_users} разных людей. Повторные сессии одного человека '
+    'сохранены; суммы пользователей между группами не обязательно аддитивны. '
+    'Выводы описывают только предоставленный набор; без схемы отбора, '
+    'затрат на рекламу и контроля смешивающих факторов нельзя переносить доли '
+    'на рынок либо объявлять каналы эффективными по причинной связи.')
 Path('analysis_facts.json').write_text(json.dumps(facts, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Сохранены: analysis_facts.json и', len(exports), 'CSV-файлов в artifacts/')
 print('Баланс строк:', facts['row_reconciliation'])''')
-md(11, '### Дополнительное задание\nНе выдавалось; не выполнялось. Дополнительные упражнения, назначаемые после защиты, в эту работу не включены.')
+md(12, '''### Дополнительные задания варианта 6: № 7, 9, 13, 15, 22, 25
+Расчётная «Длительность сессии» получена вычитанием session_start из session_end в минутах. Сверяем её с исходным time_session; часовой пояс в источнике не указан. Единица агрегации — сессия. Для заданий с категориями используем наблюдаемые квартили длительности: низкая — не более 9 мин (Q1), средняя — свыше 9 и не более 42 мин (Q3), высокая — свыше 42 мин. Так средняя категория охватывает центральную половину распределения; границы рассчитаны на очищенных данных и включают граничные значения однозначно.''')
+code(12, '''df['Длительность сессии'] = (
+    (df['session_end'] - df['session_start']).dt.total_seconds() / 60)
+if df['Длительность сессии'].isna().any() or (df['Длительность сессии'] < 0).any():
+    raise ValueError('Некорректная расчётная длительность сессии')
+duration_mismatches = int((df['Длительность сессии'] != df['time_session']).sum())
+q1, q3 = df['Длительность сессии'].quantile([0.25, 0.75])
+df['Категория длительности'] = pd.cut(
+    df['Длительность сессии'], bins=[-float('inf'), q1, q3, float('inf')],
+    labels=['низкая', 'средняя', 'высокая'])
+print(f'Расхождений с time_session: {duration_mismatches}; Q1={q1:g}, Q3={q3:g} мин')
+display(df['Категория длительности'].value_counts(sort=False).to_frame('сессий'))
+display(df[['session_start', 'session_end', 'time_session',
+            'Длительность сессии', 'Категория длительности']].head(5))''')
+md(12, '''#### Дополнительное задание № 7
+Сводная таблица (pivot_table): по каждому устройству и категории длительности показаны среднее и медиана расчётной длительности в минутах. Пустые сочетания не подменяем нулём.''')
+code(12, '''extra7 = df.pivot_table(
+    index=['device', 'Категория длительности'], values='Длительность сессии',
+    aggfunc=['mean', 'median'], observed=True)
+extra7.columns = ['среднее, мин', 'медиана, мин']
+display(extra7.round(2))''')
+md(12, '', 'extra7')
+md(13, '''#### Дополнительное задание № 9
+Группировка по категории длительности и стране: средняя, минимальная, максимальная и медианная длительность в минутах. Дополнительно показано число сессий в каждой группе, чтобы единичные наблюдения Unknown нельзя было принять за устойчивую закономерность.''')
+code(13, '''extra9 = df.groupby(
+    ['Категория длительности', 'region'], observed=True
+)['Длительность сессии'].agg(
+    сессий='size', среднее='mean', минимум='min', максимум='max', медиана='median')
+display(extra9.round(2))''')
+md(13, '', 'extra9')
+md(14, '''#### Дополнительное задание № 13
+Условие «записи, средняя длительность на которых выше числа» трактуем как **выбор каналов, для которых средняя по всем их сессиям превышает порог**, после чего сохраняем все строки выбранных каналов; сравнение каждой отдельной сессии с порогом дало бы иное условие. Порог — строго более 28 минут: близок к общей средней 29,06 мин, но исключает каналы с заметно более короткими сессиями. По отобранным записям группируем канал и вычисляем среднюю и медиану.''')
+code(14, '''threshold_min = 28
+channel_means = df.groupby('channel', observed=True)['Длительность сессии'].mean()
+qualified_channels = channel_means[channel_means > threshold_min].index.tolist()
+filtered13 = df[df['channel'].isin(qualified_channels)]
+extra13 = filtered13.groupby('channel', observed=True)['Длительность сессии'].agg(
+    сессий='size', среднее='mean', медиана='median')
+print('Порог: среднее канала >', threshold_min, 'мин; каналы:', qualified_channels,
+      '; отобрано сессий:', len(filtered13))
+display(extra13.round(2))''')
+md(14, '', 'extra13')
+md(15, '''#### Дополнительное задание № 15
+Из **всего очищенного набора** сначала выбираются два наиболее популярных устройства по числу строк; из них остаются только устройства, средняя длительность по всем их сессиям строго больше 28 мин. Далее включаются все сессии выбранных устройств и рассчитываются средняя, медиана, максимум и минимум длительности; показано число сессий. Равенства по популярности разрешаются по имени устройства.''')
+code(15, '''device_popularity = df['device'].value_counts().sort_index().sort_values(
+    ascending=False, kind='stable')
+top_devices = device_popularity.head(2).index.tolist()
+device_means = df.groupby('device', observed=True)['Длительность сессии'].mean()
+qualified_devices = [name for name in top_devices
+                     if device_means.loc[name] > threshold_min]
+filtered15 = df[df['device'].isin(qualified_devices)]
+extra15 = filtered15.groupby('device', observed=True)['Длительность сессии'].agg(
+    сессий='size', среднее='mean', медиана='median', максимум='max', минимум='min')
+print('Топ-2 устройства:', top_devices, '; с допустимой средней:',
+      qualified_devices, '; отобрано сессий:', len(filtered15))
+display(extra15.round(2))''')
+md(15, '', 'extra15')
+md(16, '''#### Дополнительное задание № 22
+Оставляем только сессии **средней категории** (>9 и ≤42 мин) и два самых популярных устройства по количеству записей во всём очищенном наборе, а не в уже отфильтрованной подвыборке. Сводная таблица (pivot_table): средняя, минимум, максимум, медиана длительности для пар устройство/канал; отдельно показаны размеры ячеек.''')
+code(16, '''filtered22 = df[
+    df['Категория длительности'].eq('средняя') & df['device'].isin(top_devices)]
+extra22 = filtered22.pivot_table(
+    index=['device', 'channel'], values='Длительность сессии',
+    aggfunc=['mean', 'min', 'max', 'median'], observed=True
+).rename(columns={'mean': 'среднее', 'min': 'минимум',
+                  'max': 'максимум', 'median': 'медиана'})
+extra22.columns = extra22.columns.get_level_values(0)
+extra22.insert(0, 'сессий', filtered22.groupby(
+    ['device', 'channel'], observed=True).size())
+print('Топ-2 устройства:', top_devices, '; отобрано сессий:', len(filtered22))
+display(extra22.round(2))''')
+md(16, '', 'extra22')
+md(17, '''#### Дополнительное задание № 25
+Берём **низкую и высокую** категории (среднюю исключаем) и два наименее популярных канала по количеству строк во всём очищенном наборе. Сводная таблица (pivot_table) по каналу и устройству показывает среднее и медиану расчётной длительности; рядом число сессий. Это намеренно усечённая выборка: её средние нельзя считать средними по каналам в целом.''')
+code(17, '''least_channels = df['channel'].value_counts().sort_index().sort_values(
+    ascending=True, kind='stable').head(2).index.tolist()
+filtered25 = df[
+    df['Категория длительности'].isin(['низкая', 'высокая'])
+    & df['channel'].isin(least_channels)]
+extra25 = filtered25.pivot_table(
+    index=['channel', 'device'], values='Длительность сессии',
+    aggfunc=['mean', 'median'], observed=True
+).rename(columns={'mean': 'среднее', 'median': 'медиана'})
+extra25.columns = extra25.columns.get_level_values(0)
+extra25.insert(0, 'сессий', filtered25.groupby(
+    ['channel', 'device'], observed=True).size())
+print('Два наименее популярных канала:', least_channels,
+      '; отобрано сессий:', len(filtered25))
+display(extra25.round(2))''')
+md(17, '', 'extra25')
+md(18, '### Итог статистического анализа дополнительных заданий')
+md(18, '', 'extra_conclusion')
+code(18, '''supplemental = {
+    'visits_with_duration': df, 'extra7_device_duration_category': extra7.reset_index(),
+    'extra9_category_region': extra9.reset_index(),
+    'extra13_channels_above_threshold': extra13.reset_index(),
+    'extra15_top_devices_above_threshold': extra15.reset_index(),
+    'extra22_medium_top_devices': extra22.reset_index(),
+    'extra25_extremes_least_channels': extra25.reset_index(),
+}
+for name, table in supplemental.items():
+    target = artifacts / f'{name}.csv'
+    table.to_csv(target, index=False, encoding='utf-8', lineterminator='\\n')
+    facts['artifact_sha256'][target.name] = hashlib.sha256(target.read_bytes()).hexdigest()
+    if name != 'visits_with_duration':
+        facts['aggregations'][name] = json.loads(
+            table.to_json(orient='records', force_ascii=False))
+category_counts = df['Категория длительности'].value_counts(sort=False)
+facts['duration_analysis'] = {
+    'q1_min': float(q1), 'q3_min': float(q3),
+    'source_duration_mismatches': duration_mismatches,
+    'categories': {str(k): int(v) for k, v in category_counts.items()},
+    'threshold_min': threshold_min, 'qualified_channels': qualified_channels,
+    'top_devices': top_devices, 'qualified_devices': qualified_devices,
+    'least_channels': least_channels,
+    'filtered_rows': {str(n): len(v) for n, v in (
+        (13, filtered13), (15, filtered15), (22, filtered22), (25, filtered25))}
+}
+facts['interpretations']['extra7'] = (
+    f'Для {len(df)} сессий получены {len(extra7)} наблюдаемых сочетаний устройства '
+    'и категории; среднее и медиана рассчитаны из интервала timestamps, а не '
+    'взяты из готового time_session. '
+    f'Сопоставление с исходным полем: {duration_mismatches} расхождений. '
+    'Сравнивать средние между категориями можно описательно: группы заранее '
+    'сформированы по самой длительности, поэтому разница ожидаема.')
+facts['interpretations']['extra9'] = (
+    f'Получены {len(extra9)} наблюдаемых сочетаний категории и страны. '
+    'Сессия Unknown — единичное наблюдение, а у Russia существенно меньше '
+    'записей, чем у United States; минимум и максимум не характеризуют '
+    'типичную длительность, для неё рядом приведена медиана.')
+facts['interpretations']['extra13'] = (
+    f'Порог {threshold_min} мин превышен в средних по каналам '
+    f'{", ".join(qualified_channels)}: {len(filtered13)} сессий. '
+    'Агрегаты относятся ко всем сессиям этих каналов, включая отдельные '
+    'сессии короче порога.')
+facts['interpretations']['extra15'] = (
+    f'По популярности лидируют {", ".join(top_devices)}; порогу среднего '
+    f'>{threshold_min} мин удовлетворяют {", ".join(qualified_devices)}. '
+    f'В выборке {len(filtered15)} сессий. Средняя и медиана описывают центр, '
+    'минимум и максимум показывают фактические крайние значения внутри группы.')
+facts['interpretations']['extra22'] = (
+    f'Для средней категории и устройств {", ".join(top_devices)} '
+    f'число сессий — {len(filtered22)}, сочетаний устройства и канала — {len(extra22)}. '
+    'Полученные средние и крайние значения условны на интервале '
+    f'({q1:g}; {q3:g}] минут, не на всех сессиях.')
+facts['interpretations']['extra25'] = (
+    f'Два наименее частых канала: {", ".join(least_channels)}. '
+    f'После исключения средней категории осталось {len(filtered25)} сессий '
+    f'в {len(extra25)} наблюдаемых парах канал/устройство. '
+    'Высокая и низкая длительности смешаны; медиана может резко отличаться '
+    'от среднего, а ячейки с малым n особенно нестабильны.')
+facts['interpretations']['extra_conclusion'] = (
+    f'Расчётная длительность по всем {len(df)} сессиям полностью совпала с '
+    f'time_session ({duration_mismatches} расхождений). '
+    f'Квартили Q1={q1:g} и Q3={q3:g} мин задают классы: '
+    f'низкий — {category_counts["низкая"]} сессий, '
+    f'средний — {category_counts["средняя"]}, '
+    f'высокий — {category_counts["высокая"]}. '
+    f'Из канальных средних порог >{threshold_min} мин выполняют '
+    f'{", ".join(qualified_channels)}; среди двух самых частых устройств '
+    f'его выполняют {", ".join(qualified_devices)}. '
+    f'Число сессий средней категории и этих двух устройств — {len(filtered22)}; '
+    f'у крайних категорий и каналов {", ".join(least_channels)} — '
+    f'{len(filtered25)}. Статистики по подвыборкам не подменяют показатели '
+    'исходной совокупности: выбор выполнен по измеряемой длительности и '
+    'частоте категорий, причинность и значимость различий не проверялись.')
+Path('analysis_facts.json').write_text(
+    json.dumps(facts, ensure_ascii=False, indent=2), encoding='utf-8')
+print('Сохранены дополнительные таблицы:', len(supplemental),
+      'CSV; строк по заданиям:', facts['duration_analysis']['filtered_rows'])''')
 
 notebook = nbf.v4.new_notebook(cells=cells, metadata={
     'kernelspec': {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'},

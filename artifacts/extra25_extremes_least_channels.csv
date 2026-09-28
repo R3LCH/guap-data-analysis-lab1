@@ -1,0 +1,9 @@
+channel,device,сессий,среднее,медиана
+MediaTornado,Android,6,23.333333333333332,7.0
+MediaTornado,Mac,4,27.75,27.0
+MediaTornado,PC,1,8.0,8.0
+MediaTornado,iPhone,17,17.470588235294116,4.0
+TipTop,Android,14,36.42857142857143,45.5
+TipTop,Mac,9,37.55555555555556,9.0
+TipTop,PC,5,43.2,43.0
+TipTop,iPhone,41,27.463414634146343,6.0
